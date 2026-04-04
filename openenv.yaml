@@ -1,0 +1,9 @@
+name: secopsops-openenv
+version: "1.0"
+description: SOC alert triage simulation environment
+entrypoint: app:app
+
+tasks:
+  - name: easy
+  - name: medium
+  - name: hard
