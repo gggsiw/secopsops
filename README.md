@@ -1,4 +1,4 @@
-# SecOpsOps OpenEnv
+# SecOps OpenEnv
 
 Security Operations Center simulation environment for AI agents.
 
