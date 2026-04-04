@@ -17,7 +17,7 @@ docker run -e HF_TOKEN=your_key secopsops
 
 ## TO RUN inference.py FILE 
 
-export  HF_TOKEN=your_token
+export  HF_TOKEN=your_key
 
 
 python inference.py
