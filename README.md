@@ -32,21 +32,13 @@ This project is built for the **Meta OpenEnv AI Hackathon**, where participants 
 * Deploy on **Hugging Face Spaces with Docker**
 * Include a **clear README (this file)**
 
-([Scaler][1])
+
 
 ---
 
 ## ⚠️ Problem Statement
 
-Modern security systems suffer from:
-
-* 🚨 Alert fatigue
-* 🧩 Disconnected event signals
-* ⏳ Slow response times
-* 🤖 Lack of intelligent automation
-
-There is no unified environment where AI agents can **learn real-world security workflows**.
-
+Build a complete, real-world OpenEnv environment that an AI agent can learn from through the standard  step() / reset() / state()  API.
 ---
 
 ## 💡 Our Approach
@@ -113,20 +105,6 @@ Each task includes:
 
 ---
 
-## 🔁 Environment Lifecycle
-
-```python
-def reset():
-    # Initialize system state
-    return state
-
-def step(action):
-    # Apply action
-    # Update environment
-    # Compute reward
-    return state, reward, done, info
-```
-
 ---
 
 ## 🤖 Baseline Agent (inference.py)
@@ -165,30 +143,17 @@ git clone https://github.com/gggsiw/secopsops.git
 
 cd secopsops
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Run environment
-python main.py
+# Run by
+sudo docker build -t test . --no-cache
+sudo docker run -p 7860:7860 -e HF_TOKEN=your_token test
 
 # Run baseline agent
+export HF_TOKEN=your_token
 python inference.py
 ```
 
 ---
 
-## 📦 Project Structure
-
-```
-secopsops/
-│── env/                # OpenEnv environment
-│── tasks/              # Task definitions
-│── agents/             # Baseline agent
-│── inference.py        # Required evaluation script
-│── openenv.yaml        # Environment config
-│── Dockerfile          # Deployment
-│── README.md
-```
 
 ---
 
@@ -198,7 +163,7 @@ secopsops/
 * Dockerized for reproducibility
 * Meets runtime constraints (≤20 min, ≤8GB RAM)
 
-([Scaler][1])
+
 
 ---
 
@@ -225,7 +190,9 @@ This project is designed to maximize:
 
 ## 👥 Team
 
-* Add your team members here
+Krishna Sharma
+
+Darsh Gupta
 
 ---
 
