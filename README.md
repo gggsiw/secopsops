@@ -1,10 +1,10 @@
-# 🚨 SecOpsOps - OpenEnv Based AI Security Environment
+#  SecOpsOps - OpenEnv Based AI Security Environment
 
 ---
 
-## 🧠 Overview
+##  Overview
 
-**SecOpsOps** is a **real-world OpenEnv reinforcement learning environment** designed to simulate **security operations (SecOps)** workflows.
+SecOpsOps is a real-world OpenEnv reinforcement learning environment designed to simulate security operations (SecOps) workflows.
 
 This environment allows AI agents to:
 
@@ -12,11 +12,11 @@ This environment allows AI agents to:
 * Correlate security events
 * Respond to cyber threats
 
-The goal is to train intelligent agents that can **automate security decision-making in production-like environments**.
+The goal is to train intelligent agents that can automate security decision-making in production-like environments.
 
 ---
 
-## 🎯 Hackathon Context
+##  Hackathon Context
 
 This project is built for the **Meta OpenEnv AI Hackathon**, where participants must create **real-world RL environments** using the OpenEnv framework.
 
@@ -30,28 +30,27 @@ This project is built for the **Meta OpenEnv AI Hackathon**, where participants 
 * Deploy on **Hugging Face Spaces with Docker**
 * Include a **clear README (this file)**
 
-
-
 ---
 
-## ⚠️ Problem Statement
+##  Problem Statement
 
 Build a complete, real-world OpenEnv environment that an AI agent can learn from through the standard  step() / reset() / state()  API.
----
-
-## 💡 Our Approach
-
-We model SecOps as an **interactive RL environment** where:
-
-* The **agent = security analyst AI**
-* The **environment = simulated infrastructure + logs**
-* The **goal = detect and mitigate threats efficiently**
 
 ---
 
-## 🏗️ OpenEnv Environment Design
+##  Our Approach
 
-### 🔹 State Space
+We model SecOps as an interactive RL environment where:
+
+* The agent = security analyst AI
+* The environment = simulated infrastructure + logs
+* The goal = detect and mitigate threats efficiently
+
+---
+
+##  OpenEnv Environment Design
+
+###  State Space
 
 Represents:
 
@@ -60,7 +59,7 @@ Represents:
 * Threat indicators
 * Historical alerts
 
-### 🔹 Action Space
+###  Action Space
 
 Agent can:
 
@@ -69,18 +68,18 @@ Agent can:
 * Trigger alerts
 * Execute mitigation actions
 
-### 🔹 Reward Function
+###  Reward Function
 
 * ✅ Correct detection → +1.0
 * ⚠️ Partial detection → +0.5
 * ❌ Missed threat → 0.0
 * 🚫 False positive penalty
 
-Designed to encourage **precision + speed**
+Designed to encourage precision + speed
 
 ---
 
-## 🧪 Tasks (Agent Evaluation)
+##  Tasks (Agent Evaluation)
 
 We implement **multi-level tasks**:
 
@@ -104,7 +103,7 @@ Each task includes:
 ---
 
 
-## 🤖 Baseline Agent (inference.py)
+##  Baseline Agent (inference.py)
 
 Includes:
 
@@ -112,17 +111,9 @@ Includes:
 * Reproducible scoring
 * Structured logs:
 
-```
-[START]
-[STEP]
-[END]
-```
-
-(Required for evaluation)
-
 ---
 
-## ⚙️ Tech Stack
+##  Tech Stack
 
 * **Framework:** OpenEnv
 * **AI/ML:** Hugging Face + RL concepts
@@ -132,36 +123,15 @@ Includes:
 
 ---
 
-## 🚀 Getting Started
-
-```bash
-# Clone repo
-git clone https://github.com/gggsiw/secopsops.git
-
-cd secopsops
-
-# Run by
-sudo docker build -t test . --no-cache
-sudo docker run -p 7860:7860 -e HF_TOKEN=your_token test
-
-# Run baseline agent
-export HF_TOKEN=your_token
-python inference.py
-```
-
----
-
-## ☁️ Deployment
+##  Deployment
 
 * Hosted on **Hugging Face Spaces**
 * Dockerized for reproducibility
 * Meets runtime constraints (≤20 min, ≤8GB RAM)
 
-
-
 ---
 
-## 📊 Evaluation Criteria Alignment
+##  Evaluation Criteria Alignment
 
 This project is designed to maximize:
 
@@ -173,43 +143,26 @@ This project is designed to maximize:
 
 ---
 
-## 🔮 Future Scope
+##  Future Scope
 
-* 🧠 Adaptive RL agents (self-learning defense systems)
-* 🔗 Integration with real SIEM tools
-* ☁️ Cloud-scale simulation environments
-* ⚡ Multi-agent collaborative defense
-
----
-
-## 👥 Team
-
-Krishna Sharma
-
-Darsh Gupta
+*  Adaptive RL agents (self-learning defense systems)
+*  Integration with real SIEM tools
+*  Cloud-scale simulation environments
+*  Multi-agent collaborative defense
 
 ---
 
-## 🏆 Why This Project Stands Out
+##  Team
 
-Unlike toy environments, **SecOpsOps models a real-world AI problem**:
-
-> Training agents to act as autonomous security analysts.
-
-This aligns directly with the hackathon’s goal of building **next-generation AI infrastructure**, not just applications.
+* Krishna Sharma
+* Darsh Gupta
 
 ---
 
-## 📜 License
+##  Why This Project Stands Out
 
-MIT License
+Unlike toy environments, SecOpsOps models a real-world AI problem:
+Training agents to act as autonomous security analysts.
+This aligns directly with the hackathon’s goal of building next-generation AI infrastructure, not just applications.
 
----
 
-## ⭐ Support
-
-If you find this project interesting, give it a ⭐ and share!
-
----
-
-[1]: https://www.scaler.com/school-of-technology/meta-pytorch-hackathon/dashboard?utm_source=chatgpt.com "Scaler School of Technology"
