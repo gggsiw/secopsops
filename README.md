@@ -69,6 +69,24 @@ Includes:
 
 ---
 
+##  Getting Started
+
+```bash 
+# Clone repo
+git clone https://github.com/gggsiw/secopsops.git
+
+cd secopsops
+
+# Run by
+sudo docker build -t test . --no-cache
+sudo docker run -p 7860:7860 -e HF_TOKEN=your_token test
+
+# Run baseline agent
+export HF_TOKEN=your_token
+python inference.py
+```
+---
+
 ##  Deployment
 
 * Hosted on **Hugging Face Spaces**
