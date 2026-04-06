@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
@@ -18,14 +19,13 @@ class StepRequest(BaseModel):
 def root():
     return """<html><body style="font-family:monospace;padding:40px;background:#0d1117;color:#58a6ff">
     <h1>🛡️ SecOpsOps OpenEnv</h1>
-    <p style="color:#8b949e">Real-world SOC analyst environment for AI agent training</p>
     <ul style="color:#e6edf3">
-        <li>GET  /health — health check</li>
-        <li>GET  /tasks  — list tasks</li>
-        <li>POST /reset  — reset environment</li>
-        <li>POST /step   — take action</li>
-        <li>GET  /state  — current state</li>
-        <li><a href="/docs" style="color:#58a6ff">GET  /docs   — API playground</a></li>
+        <li>GET  /health</li>
+        <li>GET  /tasks</li>
+        <li>POST /reset</li>
+        <li>POST /step</li>
+        <li>GET  /state</li>
+        <li><a href="/docs" style="color:#58a6ff">GET /docs</a></li>
     </ul></body></html>"""
 
 @app.get("/health")
@@ -37,7 +37,7 @@ def list_tasks():
     return {"tasks": [
         {"name": "easy",   "difficulty": "easy",   "num_alerts": 3, "description": "2x malware + 1x false positive"},
         {"name": "medium", "difficulty": "medium", "num_alerts": 4, "description": "Login alerts — query logs before blocking"},
-        {"name": "hard",   "difficulty": "hard",   "num_alerts": 5, "description": "Full APT chain: phishing → lateral movement → exfiltration"},
+        {"name": "hard",   "difficulty": "hard",   "num_alerts": 5, "description": "Full APT chain"},
     ]}
 
 @app.post("/reset")
@@ -66,3 +66,9 @@ def state(task_name: str = "easy"):
     if not env:
         raise HTTPException(status_code=400, detail="Call /reset first")
     return env.state()
+
+def main():
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+
+if _name_ == "_main_":
+    main()
