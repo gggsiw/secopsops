@@ -38,37 +38,7 @@ Build a complete, real-world OpenEnv environment that an AI agent can learn from
 
 ---
 
-##  Our Approach
-
-We model SecOps as an interactive RL environment where:
-
-* The agent = security analyst AI
-* The environment = simulated infrastructure + logs
-* The goal = detect and mitigate threats efficiently
-
----
-
-##  OpenEnv Environment Design
-
-###  State Space
-
-Represents:
-
-* System logs
-* Network activity
-* Threat indicators
-* Historical alerts
-
-###  Action Space
-
-Agent can:
-
-* Investigate logs
-* Flag anomalies
-* Trigger alerts
-* Execute mitigation actions
-
-###  Reward Function
+##  Reward Function
 
 * ✅ Correct detection → +1.0
 * ⚠️ Partial detection → +0.5
@@ -78,30 +48,6 @@ Agent can:
 Designed to encourage precision + speed
 
 ---
-
-##  Tasks (Agent Evaluation)
-
-We implement **multi-level tasks**:
-
-### 🟢 Easy
-
-* Detect obvious anomalies in logs
-
-### 🟡 Medium
-
-* Correlate multiple weak signals
-
-### 🔴 Hard
-
-* Identify stealth / multi-stage attacks
-
-Each task includes:
-
-* Automated graders
-* Scoring logic (0.0 → 1.0)
-
----
-
 
 ##  Baseline Agent (inference.py)
 
@@ -128,18 +74,6 @@ Includes:
 * Hosted on **Hugging Face Spaces**
 * Dockerized for reproducibility
 * Meets runtime constraints (≤20 min, ≤8GB RAM)
-
----
-
-##  Evaluation Criteria Alignment
-
-This project is designed to maximize:
-
-* ✅ Runtime correctness
-* ✅ OpenEnv compliance
-* ✅ Real-world task relevance
-* ✅ Strong reward design
-* ✅ Clear grading logic
 
 ---
 
