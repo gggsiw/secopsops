@@ -153,9 +153,6 @@ python inference.py
 
 ---
 
-
----
-
 ## ☁️ Deployment
 
 * Hosted on **Hugging Face Spaces**
