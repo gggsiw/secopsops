@@ -1,6 +1,4 @@
-# 🚨 SecOpsOps – OpenEnv-Based AI Security Environment
-
-> Built for the **Meta × Hugging Face × PyTorch OpenEnv Hackathon (Scaler School of Technology)**
+# 🚨 SecOpsOps - OpenEnv Based AI Security Environment
 
 ---
 
