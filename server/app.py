@@ -70,5 +70,5 @@ def state(task_name: str = "easy"):
 def main():
     uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
