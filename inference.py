@@ -72,7 +72,7 @@ def run_task(task_name):
         success = False
     rewards_str = ",".join(f"{r:.2f}" for r in rewards)
     avg = sum(rewards)/len(rewards) if rewards else 0.0
-    print(f"[END] success={str(success).lower()} steps={step} rewards={rewards_str}", flush=True)
+    print(f"[END] success={str(success).lower()} steps={step} score={avg:.3f} rewards={rewards_str}", flush=True)
     print(f"      → Avg score '{task_name}': {avg:.4f}\n", flush=True)
     return avg
 
