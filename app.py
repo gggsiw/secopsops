@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from env.environment import SecOpsEnv
 from env.models import Action
+from typing import Optional
 
 app = FastAPI(title="SecOpsOps OpenEnv")
 _envs = {}
@@ -40,12 +41,18 @@ def list_tasks():
         {"name": "hard",   "difficulty": "hard",   "num_alerts": 5, "description": "Full APT chain"},
     ]}
 
+
+
 @app.post("/reset")
-def reset(req: ResetRequest):
-    if req.task_name not in ["easy", "medium", "hard"]:
-        raise HTTPException(status_code=404, detail=f"Unknown task '{req.task_name}'")
-    env = SecOpsEnv(req.task_name)
-    _envs[req.task_name] = env
+def reset(req: Optional[ResetRequest] = None):
+    task_name = req.task_name if req else "easy"
+
+    if task_name not in ["easy", "medium", "hard"]:
+        raise HTTPException(status_code=404, detail=f"Unknown task '{task_name}'")
+
+    env = SecOpsEnv(task_name)
+    _envs[task_name] = env
+
     obs = env.reset()
     return obs.model_dump()
 
