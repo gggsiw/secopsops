@@ -25,8 +25,8 @@ class LogEntry(BaseModel):
 class Ticket(BaseModel):
     ticket_id: str
     alert_id: str
-    status: str          # open | in_progress | escalated | closed
-    priority: str        # P1 | P2 | P3
+    status: str          #open | in_progress | escalated | closed
+    priority: str        #P1 | P2 | P3
     assigned_to: str
     notes: str = ""
 
@@ -50,11 +50,11 @@ class Observation(BaseModel):
 
 
 class Action(BaseModel):
-    action_type: str                    # investigate | query_logs | block_ip | escalate | close | report | create_ticket | query_siem
-    target_id: Optional[str] = None     # alert id to target
-    query: Optional[str] = None         # IP or search string
-    content: Optional[str] = None       # notes / ticket content
-    priority: Optional[str] = None      # P1 | P2 | P3 for tickets
+    action_type: str                    #investigate | query_logs | block_ip | escalate | close | report | create_ticket | query_siem
+    target_id: Optional[str] = None     #alert id to target
+    query: Optional[str] = None         #IP or search string
+    content: Optional[str] = None       #notes / ticket content
+    priority: Optional[str] = None      #P1 | P2 | P3 for tickets
 
 
 class Reward(BaseModel):
