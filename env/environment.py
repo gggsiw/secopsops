@@ -45,7 +45,7 @@ class SecOpsEnv:
 
         alert = alerts[self._index]
 
-        # --- Handle multi-app tool actions (don't advance alert index) ---
+    
         if action.action_type == "create_ticket":
             ticket = self._create_ticket(alert, action)
             self._history.append("create_ticket")
@@ -68,7 +68,7 @@ class SecOpsEnv:
             )
             return obs, reward, False, {"siem_risk_score": result.risk_score, "matched_events": len(result.matched_logs)}
 
-        # --- Core triage actions (advance alert index) ---
+
         base, reason, speed_bonus, chain_bonus, fp_penalty = grade_step(
             self.task, alert, action, self.state()
         )
@@ -127,9 +127,7 @@ class SecOpsEnv:
             "alerts_remaining": max(0, len(self.task["alerts"]) - self._index),
         }
 
-    # ------------------------------------------------------------------
-    # Multi-app tool: Ticket System (ServiceNow-style)
-    # ------------------------------------------------------------------
+  
     def _create_ticket(self, alert, action: Action) -> Ticket:
         priority_map = {"high": "P1", "medium": "P2", "low": "P3"}
         priority = action.priority or priority_map.get(alert.severity, "P2")
@@ -145,9 +143,7 @@ class SecOpsEnv:
         self._ticket_counter += 1
         return ticket
 
-    # ------------------------------------------------------------------
-    # Multi-app tool: SIEM Correlation Query
-    # ------------------------------------------------------------------
+   
     def _query_siem(self, query: str) -> SIEMResult:
         all_logs: list[LogEntry] = self.task.get("logs", [])
         matched = [log for log in all_logs if query in log.ip or query in (log.event or "")]
