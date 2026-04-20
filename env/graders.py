@@ -17,8 +17,7 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
     history = state.get("history", [])
     step_index = state.get("index", 0)
 
-    # --- prior actions on this alert (within current step context) ---
-    prior = history  # all actions so far in episode
+    prior = history  
 
     base = 0.0
     reason = ""
@@ -26,9 +25,7 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
     chain_bonus = 0.0
     fp_penalty = 0.0
 
-    # ----------------------------------------------------------------
-    # FALSE POSITIVE
-    # ----------------------------------------------------------------
+   
     if t == "false_positive":
         if a == "close":
             base = 0.95
@@ -54,9 +51,7 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
             base = 0.05
             reason = f"Suboptimal action '{a}' on false positive"
 
-    # ----------------------------------------------------------------
-    # MALWARE - HIGH
-    # ----------------------------------------------------------------
+   
     elif t == "malware" and s == "high":
         if a == "block_ip":
             base = 0.95
@@ -91,9 +86,7 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
             base = 0.01
             reason = f"Wrong action '{a}' for high-severity malware"
 
-    # ----------------------------------------------------------------
-    # LOGIN - MEDIUM (brute force suspected)
-    # ----------------------------------------------------------------
+
     elif t == "login" and s == "medium":
         if a == "query_logs":
             base = 0.75
@@ -135,9 +128,6 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
             base = 0.01
             reason = f"Wrong '{a}' for medium login"
 
-    # ----------------------------------------------------------------
-    # LOGIN - LOW (likely benign)
-    # ----------------------------------------------------------------
     elif t == "login" and s == "low":
         if a in ["investigate", "query_logs"]:
             base = 0.65
@@ -161,9 +151,6 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
             base = 0.10
             reason = f"Suboptimal '{a}' for low login"
 
-    # ----------------------------------------------------------------
-    # LOGIN - HIGH (admin / blacklisted IP)
-    # ----------------------------------------------------------------
     elif t == "login" and s == "high":
         if a == "escalate":
             base = 0.95
@@ -199,9 +186,7 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
             base = 0.01
             reason = f"Wrong '{a}' for high login"
 
-    # ----------------------------------------------------------------
-    # PHISHING
-    # ----------------------------------------------------------------
+
     elif t == "phishing":
         if a == "query_logs":
             base = 0.75
@@ -240,9 +225,7 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
             base = 0.05
             reason = f"Suboptimal '{a}' for phishing"
 
-    # ----------------------------------------------------------------
-    # LATERAL MOVEMENT - HIGH
-    # ----------------------------------------------------------------
+  
     elif t == "lateral_movement" and s == "high":
         if a == "escalate":
             base = 0.95
@@ -278,9 +261,7 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
             base = 0.01
             reason = f"Wrong '{a}' for lateral movement"
 
-    # ----------------------------------------------------------------
-    # EXFILTRATION - HIGH (data leaving NOW)
-    # ----------------------------------------------------------------
+   
     elif t == "exfiltration" and s == "high":
         if a == "block_ip":
             base = 0.95
@@ -320,7 +301,7 @@ def grade_step(task: dict, alert, action: Action, state: dict) -> tuple[float, s
         base = 0.05
         reason = f"Unrecognized alert type '{t}' severity '{s}'"
 
-    # Clamp all values
+    
     base = max(0.0, min(1.0, base))
     speed_bonus = max(0.0, min(0.10, speed_bonus))
     chain_bonus = max(0.0, min(0.15, chain_bonus))
