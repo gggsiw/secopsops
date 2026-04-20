@@ -1,9 +1,98 @@
 name: secopsops-openenv
-version: "1.0"
-description: SOC alert triage simulation environment
+version: "2.0"
+description: >
+  Security Operations Center (SOC) simulation environment.
+  Trains AI agents to triage, correlate, and respond to real-world
+  cyber threats across a multi-app enterprise workflow (SIEM + ticketing).
+
 entrypoint: app:app
+runtime: python3.11
+framework: openenv
+
+environment:
+  type: sequential_episodic
+  observation_space: structured_json
+  action_space: discrete_with_params
+  reward_range: [0.0, 1.0]
+  max_steps_per_episode: 20
 
 tasks:
   - name: easy
+    difficulty: easy
+    num_alerts: 3
+    description: "Malware detection and false positive triage. One optimal action per alert."
+    tools_required: [block_ip, close, investigate]
+    expected_avg_reward: 0.85
+
   - name: medium
+    difficulty: medium
+    num_alerts: 4
+    description: "Brute-force and credential abuse. Log investigation required before blocking."
+    tools_required: [query_logs, query_siem, block_ip, escalate, create_ticket]
+    expected_avg_reward: 0.75
+
   - name: hard
+    difficulty: hard
+    num_alerts: 5
+    description: "Full APT kill chain: phishing → lateral movement → exfiltration. Context across steps required."
+    tools_required: [query_logs, query_siem, block_ip, escalate, report, create_ticket]
+    expected_avg_reward: 0.65
+
+actions:
+  - name: investigate
+    description: Gather general context on ambiguous alert
+  - name: query_logs
+    description: Pull structured log data for timeline analysis
+  - name: query_siem
+    description: Correlate alert with other events in SIEM (multi-app)
+    params: [query]
+  - name: block_ip
+    description: Immediately block malicious IP address
+    params: [query]
+  - name: escalate
+    description: Escalate to Tier-2 / incident response team
+  - name: close
+    description: Close alert as benign / false positive
+  - name: report
+    description: File formal incident report
+  - name: create_ticket
+    description: Create tracking ticket in ticketing system (multi-app)
+    params: [content, priority]
+
+reward_model:
+  base_score:
+    description: Correctness of action for alert type and severity
+    range: [0.0, 0.95]
+  speed_bonus:
+    description: Bonus for fast decisive action on critical threats
+    range: [0.0, 0.10]
+  chain_bonus:
+    description: Bonus for correct multi-step sequences (e.g. query_logs → block_ip)
+    range: [0.0, 0.15]
+  false_positive_penalty:
+    description: Penalty for blocking or escalating known-safe assets
+    range: [-0.40, 0.0]
+
+multi_app_tools:
+  - name: SIEM (Splunk/Elastic style)
+    endpoint: /siem/query
+    action: query_siem
+  - name: Ticketing (ServiceNow style)
+    endpoint: /tickets
+    action: create_ticket
+
+endpoints:
+  - GET  /health
+  - GET  /tasks
+  - POST /reset
+  - POST /step
+  - GET  /state
+  - GET  /tickets
+  - POST /siem/query
+  - GET  /docs
+
+deployment:
+  platform: huggingface_spaces
+  docker: true
+  port: 7880
+  url: https://itzrealmee-secopsops.hf.space
