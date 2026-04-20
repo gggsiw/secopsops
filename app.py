@@ -144,9 +144,7 @@ def state(task_name: str = "easy"):
     return env.state()
 
 
-# ------------------------------------------------------------------
-# Multi-app endpoint: Ticket System
-# ------------------------------------------------------------------
+
 @app.get("/tickets")
 def get_tickets(task_name: str = "easy"):
     """List all tickets created during the current episode (ServiceNow-style)."""
@@ -159,9 +157,7 @@ def get_tickets(task_name: str = "easy"):
     }
 
 
-# ------------------------------------------------------------------
-# Multi-app endpoint: SIEM Query
-# ------------------------------------------------------------------
+
 class SIEMQueryRequest(BaseModel):
     task_name: str = "easy"
     query: str
