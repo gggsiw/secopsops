@@ -1,1 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecOpsOps — SOC Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#020b0f;--panel:#040f14;--border:#0a3d2e;--green:#00ff88;--red:#ff3860;--yellow:#ffdd57;--blue:#00cfff;--text:#c8f0e0;--muted:#3a6b56;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;padding:20px;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:999;}
+.logo{font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;color:var(--green);text-shadow:0 0 20px rgba(0,255,136,0.3);letter-spacing:3px;margin-bottom:20px;}
+.task-selector{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.task-btn{font-family:'Orbitron',monospace;font-size:0.7rem;letter-spacing:2px;padding:10px 20px;border:1px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.task-btn:hover,.task-btn.active{border-color:var(--green);color:var(--green);background:rgba(0,255,136,0.05);}
+.task-btn.medium.active{border-color:var(--yellow);color:var(--yellow);}
+.task-btn.hard.active{border-color:var(--red);color:var(--red);}
+.grid{display:grid;grid-template-columns:1fr 340px;gap:20px;}
+@media(max-width:900px){.grid{grid-template-columns:1fr;}}
+.panel{background:var(--panel);border:1px solid var(--border);padding:20px;margin-bottom:15px;position:relative;}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);}
+.panel-title{font-family:'Orbitron',monospace;font-size:0.65rem;letter-spacing:3px;color:var(--green);margin-bottom:15px;}
+.alert-card{border:1px solid var(--border);padding:15px;margin-bottom:15px;}
+.alert-card.high{border-color:var(--red);background:rgba(255,56,96,0.03);}
+.alert-card.medium{border-color:var(--yellow);background:rgba(255,221,87,0.03);}
+.alert-card.low{border-color:var(--green);background:rgba(0,255,136,0.03);}
+.alert-type{font-family:'Orbitron',monospace;font-size:0.85rem;font-weight:700;letter-spacing:2px;margin-bottom:8px;}
+.badge{font-size:0.65rem;padding:2px 8px;letter-spacing:2px;font-family:'Orbitron',monospace;float:right;}
+.badge.high{color:var(--red);border:1px solid var(--red);}
+.badge.medium{color:var(--yellow);border:1px solid var(--yellow);}
+.badge.low{color:var(--green);border:1px solid var(--green);}
+.alert-desc{font-size:0.82rem;line-height:1.6;margin-bottom:8px;}
+.alert-meta{font-size:0.7rem;color:var(--muted);}
+.alert-meta span{color:var(--blue);}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.tag{font-size:0.6rem;padding:2px 6px;border:1px solid var(--muted);color:var(--muted);}
+.actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px;}
+.action-btn{font-family:'Share Tech Mono',monospace;font-size:0.75rem;padding:11px 8px;border:1px solid var(--border);background:rgba(0,255,136,0.02);color:var(--text);cursor:pointer;transition:all 0.15s;text-align:left;}
+.action-btn:hover:not(:disabled){border-color:var(--green);color:var(--green);background:rgba(0,255,136,0.07);transform:translateX(2px);}
+.action-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.reward-box{display:none;margin-top:15px;padding:15px;border:1px solid var(--border);background:rgba(0,0,0,0.4);}
+.reward-box.show{display:block;animation:fadein 0.3s ease;}
+@keyframes fadein{from{opacity:0;transform:scale(0.98);}to{opacity:1;transform:scale(1);}}
+.reward-num{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;line-height:1;}
+.reward-num.good{color:var(--green);text-shadow:0 0 20px rgba(0,255,136,0.4);}
+.reward-num.mid{color:var(--yellow);}
+.reward-num.bad{color:var(--red);}
+.reward-reason{font-size:0.78rem;margin:6px 0;}
+.reward-bonuses{font-size:0.68rem;color:var(--muted);}
+.reward-bonuses .b{color:var(--green);}
+.reward-bonuses .p{color:var(--red);}
+.done-box{display:none;padding:20px;border:1px solid var(--green);background:rgba(0,255,136,0.05);text-align:center;margin-top:15px;}
+.done-box.show{display:block;}
+.done-box h2{font-family:'Orbitron',monospace;color:var(--green);letter-spacing:3px;margin-bottom:10px;}
+.done-score{font-family:'Orbitron',monospace;font-size:3rem;font-weight:900;color:var(--green);text-shadow:0 0 20px rgba(0,255,136,0.4);}
+.cumulative{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;color:var(--blue);text-shadow:0 0 20px rgba(0,207,255,0.3);}
+.progress-bar{width:100%;height:4px;background:var(--border);margin-top:12px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));transition:width 0.5s ease;}
+.history-log{max-height:220px;overflow-y:auto;font-size:0.72rem;}
+.log-entry{padding:5px 0;border-bottom:1px solid rgba(10,61,46,0.3);display:flex;justify-content:space-between;}
+.log-entry .la{color:var(--blue);}
+.log-entry .lr{font-family:'Orbitron',monospace;font-size:0.68rem;}
+.lr.good{color:var(--green);}
+.lr.bad{color:var(--red);}
+.lr.mid{color:var(--yellow);}
+.siem-log{max-height:150px;overflow-y:auto;font-size:0.7rem;}
+.siem-entry{padding:4px 0;border-bottom:1px solid rgba(10,61,46,0.2);color:var(--muted);}
+.siem-entry .ip{color:var(--yellow);}
+.start-screen{text-align:center;padding:50px 20px;}
+.start-screen h2{font-family:'Orbitron',monospace;color:var(--muted);letter-spacing:4px;font-size:0.9rem;margin-bottom:25px;}
+.start-btn{font-family:'Orbitron',monospace;font-size:0.85rem;letter-spacing:4px;padding:16px 45px;border:2px solid var(--green);background:transparent;color:var(--green);cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px rgba(0,255,136,0.3);}
+.start-btn:hover{background:rgba(0,255,136,0.1);transform:scale(1.04);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.stat-item .label{font-size:0.6rem;color:var(--muted);letter-spacing:2px;margin-bottom:3px;}
+.stat-item .value{font-family:'Orbitron',monospace;font-size:0.85rem;color:var(--blue);}
+.alert-counter{font-size:0.65rem;color:var(--muted);letter-spacing:2px;margin-bottom:12px;}
+.alert-counter span{color:var(--green);}
+</style>
+</head>
+<body>
+<div style="max-width:1300px;margin:0 auto;">
+  <div class="logo">🛡️ SecOpsOps <span style="color:var(--blue);font-size:1rem;">SOC TERMINAL</span></div>
 
+  <div class="task-selector">
+    <button class="task-btn easy active" onclick="selectTask('easy')">⚡ EASY</button>
+    <button class="task-btn medium" onclick="selectTask('medium')">⚠️ MEDIUM</button>
+    <button class="task-btn hard" onclick="selectTask('hard')">☠️ HARD — APT CHAIN</button>
+    <button class="task-btn" onclick="startGame()" style="margin-left:auto;border-color:var(--green);color:var(--green);">▶ START EPISODE</button>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="panel">
+        <div class="panel-title">ACTIVE ALERT TRIAGE</div>
+        <div class="start-screen" id="start-screen">
+          <h2>SELECT TASK AND START EPISODE</h2>
+          <p style="color:var(--muted);font-size:0.8rem;margin-bottom:25px;">Act as a SOC analyst. Triage each alert. Chain actions for bonus rewards.</p>
+          <button class="start-btn" onclick="startGame()">INITIALIZE SOC TERMINAL</button>
+        </div>
+        <div id="game-area" style="display:none">
+          <div class="alert-counter">ALERT <span id="alert-num">1</span> OF <span id="alert-total">—</span></div>
+          <div id="alert-card" class="alert-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div class="alert-type" id="alert-type">—</div>
+              <div class="badge" id="alert-sev">—</div>
+            </div>
+            <div class="alert-desc" id="alert-desc">—</div>
+            <div class="alert-meta">SRC: <span id="alert-ip">—</span> &nbsp; USER: <span id="alert-user">—</span> &nbsp; TIME: <span id="alert-time">—</span></div>
+            <div class="tags" id="alert-tags"></div>
+          </div>
+          <div class="reward-box" id="reward-box">
+            <div class="reward-num" id="reward-num">—</div>
+            <div class="reward-reason" id="reward-reason">—</div>
+            <div class="reward-bonuses" id="reward-bonuses"></div>
+          </div>
+          <div class="actions-grid" id="actions-grid">
+            <button class="action-btn" onclick="act('investigate')">🔍 INVESTIGATE</button>
+            <button class="action-btn" onclick="act('query_logs')">📋 QUERY LOGS</button>
+            <button class="action-btn" onclick="act('query_siem')">📡 QUERY SIEM</button>
+            <button class="action-btn" onclick="act('block_ip')">🚫 BLOCK IP</button>
+            <button class="action-btn" onclick="act('escalate')">🚨 ESCALATE</button>
+            <button class="action-btn" onclick="act('close')">✅ CLOSE</button>
+            <button class="action-btn" onclick="act('report')">📝 REPORT</button>
+            <button class="action-btn" onclick="act('create_ticket')">🎫 CREATE TICKET</button>
+          </div>
+          <div class="done-box" id="done-box">
+            <h2>⚡ EPISODE COMPLETE</h2>
+            <div class="done-score" id="done-score">—</div>
+            <div style="color:var(--muted);font-size:0.72rem;margin-top:8px;letter-spacing:2px;">CUMULATIVE REWARD</div>
+            <button class="start-btn" onclick="startGame()" style="margin-top:18px;font-size:0.7rem;padding:10px 28px;">↺ PLAY AGAIN</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">SIEM LOG FEED</div>
+        <div class="siem-log" id="siem-log"><div style="color:var(--muted);font-size:0.75rem;">Start an episode to see logs...</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <div class="panel-title">CUMULATIVE REWARD</div>
+        <div class="cumulative" id="cum-score">0.00</div>
+        <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:0.62rem;color:var(--muted);"><span>0.0</span><span id="max-score">—</span></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">EPISODE STATS</div>
+        <div class="stat-grid">
+          <div class="stat-item"><div class="label">TASK</div><div class="value" id="s-task">—</div></div>
+          <div class="stat-item"><div class="label">ALERTS</div><div class="value" id="s-alerts">—</div></div>
+          <div class="stat-item"><div class="label">BLOCKED IPs</div><div class="value" style="color:var(--red)" id="s-blocked">0</div></div>
+          <div class="stat-item"><div class="label">TICKETS</div><div class="value" style="color:var(--yellow)" id="s-tickets">0</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">ACTION HISTORY</div>
+        <div class="history-log" id="hist-log"><div style="color:var(--muted);font-size:0.72rem;">No actions yet...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const ENV='https://itzrealmee-secopsops.hf.space';
+let task='easy',obs=null,done=false,busy=false,cum=0,total=0,step=0;
+
+function selectTask(t){
+  task=t;
+  document.querySelectorAll('.task-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.task-btn.'+t)?.classList.add('active');
+}
+
+async function startGame(){
+  done=false;busy=false;cum=0;step=0;
+  document.getElementById('start-screen').style.display='none';
+  document.getElementById('game-area').style.display='block';
+  document.getElementById('done-box').classList.remove('show');
+  document.getElementById('reward-box').classList.remove('show');
+  document.getElementById('hist-log').innerHTML='<div style="color:var(--muted);font-size:0.72rem;">No actions yet...</div>';
+  document.getElementById('cum-score').textContent='0.00';
+  document.getElementById('prog').style.width='0%';
+  setEnabled(false);
+  try{
+    const r=await fetch(`${ENV}/reset`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task_name:task})});
+    obs=await r.json();
+    total=obs.alerts.length;
+    document.getElementById('alert-total').textContent=total;
+    document.getElementById('max-score').textContent=total.toFixed(1);
+    document.getElementById('s-task').textContent=task.toUpperCase();
+    document.getElementById('s-alerts').textContent=total;
+    renderLogs(obs.logs);
+    renderAlert(obs.current_alert,0);
+    setEnabled(true);
+  }catch(e){alert('Cannot connect to environment at '+ENV);}
+}
+
+async function act(action){
+  if(done||busy)return;
+  busy=true;setEnabled(false);
+  const alert=obs.current_alert;
+  try{
+    const r=await fetch(`${ENV}/step`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task_name:task,action:{action_type:action,query:alert?.source_ip,priority:alert?.severity==='high'?'P1':alert?.severity==='medium'?'P2':'P3'}})});
+    const data=await r.json();
+    const rw=data.reward;
+    cum=data.observation.cumulative_reward;
+    document.getElementById('cum-score').textContent=cum.toFixed(2);
+    document.getElementById('prog').style.width=Math.min(100,(cum/total)*100)+'%';
+    document.getElementById('s-tickets').textContent=data.observation.tickets?.length||0;
+    document.getElementById('s-blocked').textContent=data.observation.history?.filter(h=>h==='block_ip').length||0;
+    showReward(rw,action);
+    addHist(action,rw.final_score,alert?.type);
+    obs=data.observation;step++;
+    if(data.done){done=true;setTimeout(()=>showDone(),1600);}
+    else{
+      const tools=['create_ticket','query_siem'];
+      setTimeout(()=>{
+        document.getElementById('reward-box').classList.remove('show');
+        if(!tools.includes(action)&&obs.current_alert)renderAlert(obs.current_alert,step);
+        setEnabled(true);busy=false;
+      },tools.includes(action)?1000:1800);
+    }
+  }catch(e){setEnabled(true);busy=false;}
+}
+
+function renderAlert(a,idx){
+  if(!a)return;
+  const card=document.getElementById('alert-card');
+  card.className='alert-card '+a.severity;
+  document.getElementById('alert-num').textContent=idx+1;
+  document.getElementById('alert-type').textContent=a.type.replace('_',' ').toUpperCase();
+  document.getElementById('alert-desc').textContent=a.description;
+  document.getElementById('alert-ip').textContent=a.source_ip;
+  document.getElementById('alert-user').textContent=a.user||'unknown';
+  document.getElementById('alert-time').textContent=a.timestamp?a.timestamp.split('T')[1].replace('Z',''):'—';
+  const sev=document.getElementById('alert-sev');
+  sev.textContent=a.severity.toUpperCase();sev.className='badge '+a.severity;
+  document.getElementById('alert-tags').innerHTML=(a.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+}
+
+function showReward(rw,action){
+  const box=document.getElementById('reward-box');
+  const num=document.getElementById('reward-num');
+  const s=rw.final_score;
+  num.textContent=s.toFixed(2);
+  num.className='reward-num '+(s>=0.8?'good':s>=0.5?'mid':'bad');
+  document.getElementById('reward-reason').textContent=rw.reason;
+  let b=[];
+  if(rw.speed_bonus>0)b.push(`<span class="b">+${rw.speed_bonus.toFixed(2)} SPEED</span>`);
+  if(rw.chain_bonus>0)b.push(`<span class="b">+${rw.chain_bonus.toFixed(2)} CHAIN</span>`);
+  if(rw.false_positive_penalty<0)b.push(`<span class="p">${rw.false_positive_penalty.toFixed(2)} FP PENALTY</span>`);
+  document.getElementById('reward-bonuses').innerHTML=b.join(' | ');
+  box.classList.add('show');
+}
+
+function addHist(action,score,type){
+  const log=document.getElementById('hist-log');
+  if(log.querySelector('[style*="No actions"]'))log.innerHTML='';
+  const cls=score>=0.8?'good':score>=0.5?'mid':'bad';
+  const el=document.createElement('div');
+  el.className='log-entry';
+  el.innerHTML=`<span class="la">${action.replace('_',' ')}</span><span style="color:var(--muted);font-size:0.65rem;">${type||'—'}</span><span class="lr ${cls}">${score.toFixed(2)}</span>`;
+  log.insertBefore(el,log.firstChild);
+}
+
+function renderLogs(logs){
+  const el=document.getElementById('siem-log');
+  if(!logs||!logs.length){el.innerHTML='<div style="color:var(--muted)">No logs</div>';return;}
+  el.innerHTML=logs.map(l=>`<div class="siem-entry">[${(l.timestamp||'').split('T')[1]?.replace('Z','')||l.timestamp}] <span class="ip">${l.ip}</span> ${l.event}${l.details?' — '+l.details:''}</div>`).join('');
+}
+
+function showDone(){
+  document.getElementById('done-box').classList.add('show');
+  document.getElementById('done-score').textContent=cum.toFixed(2);
+  setEnabled(false);
+}
+
+function setEnabled(e){document.querySelectorAll('.action-btn').forEach(b=>b.disabled=!e);}
+</script>
+</body>
+</html>
