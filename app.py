@@ -173,6 +173,15 @@ def siem_query(req: SIEMQueryRequest):
     return result.model_dump()
 
 
+
+@app.get("/play", response_class=HTMLResponse)
+def play():
+    with open("play.html", "r") as f:
+        return f.read()
+
+
+
+
 def main():
     uvicorn.run("server.app:app", host="0.0.0.0", port=7880, reload=False)
 
