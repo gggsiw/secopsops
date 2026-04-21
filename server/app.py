@@ -144,9 +144,7 @@ def state(task_name: str = "easy"):
     return env.state()
 
 
-# ------------------------------------------------------------------
-# Multi-app endpoint: Ticket System
-# ------------------------------------------------------------------
+
 @app.get("/tickets")
 def get_tickets(task_name: str = "easy"):
     """List all tickets created during the current episode (ServiceNow-style)."""
@@ -159,9 +157,7 @@ def get_tickets(task_name: str = "easy"):
     }
 
 
-# ------------------------------------------------------------------
-# Multi-app endpoint: SIEM Query
-# ------------------------------------------------------------------
+
 class SIEMQueryRequest(BaseModel):
     task_name: str = "easy"
     query: str
@@ -177,9 +173,17 @@ def siem_query(req: SIEMQueryRequest):
     return result.model_dump()
 
 
-def main():
-    uvicorn.run("server.app:app", host="0.0.0.0", port=7880, reload=False)
 
+@app.get("/play", response_class=HTMLResponse)
+def play():
+    with open("play.html", "r") as f:
+        return f.read()
+
+
+
+
+def main():
+    uvicorn.run("app:app", host="0.0.0.0", port=7860, reload=False)
 
 if __name__ == "__main__":
     main()
