@@ -1,4 +1,4 @@
-# SecOpsOps — Teaching AI to Think Like a Security Analyst
+# SecOpsOps - Teaching AI to Think Like a Security Analyst
 
 **HuggingFace Space:** https://huggingface.co/spaces/itzrealmee/secopsops  
 **Live Demo:** https://itzrealmee-secopsops.hf.space/play  
@@ -10,9 +10,9 @@
 
 ## The Problem
 
-Every 39 seconds, a company gets attacked. The people defending them — SOC analysts — are drowning in alerts. On a typical day, one analyst handles over a thousand security alerts. Most of them are noise. But buried in that noise is the one alert that matters — the ransomware, the data theft, the hacker who's already inside.
+Every 39 seconds, a company gets attacked. The people defending them - SOC analysts - are drowning in alerts. On a typical day, one analyst handles over a thousand security alerts. Most of them are noise. But buried in that noise is the one alert that matters - the ransomware, the data theft, the hacker who's already inside.
 
-We thought: what if an AI could handle the first line of triage? Not replace the analyst, but be the analyst's first responder — fast, consistent, and trained to know the difference between a real threat and a false alarm.
+We thought: what if an AI could handle the first line of triage? Not replace the analyst, but be the analyst's first responder - fast, consistent, and trained to know the difference between a real threat and a false alarm.
 
 That's SecOpsOps.
 
@@ -35,7 +35,7 @@ The agent has access to 8 actions:
 | `report` | File a formal incident report |
 | `create_ticket` | Open a tracking ticket in the ticketing system |
 
-The last two actions — `query_siem` and `create_ticket` — connect to real enterprise tool simulations. SIEM is like Splunk. Ticketing is like ServiceNow. This is what makes SecOpsOps different from a simple game — it's a real multi-app enterprise workflow.
+The last two actions - `query_siem` and `create_ticket` - connect to real enterprise tool simulations. SIEM is like Splunk. Ticketing is like ServiceNow. This is what makes SecOpsOps different from a simple game - it's a real multi-app enterprise workflow.
 
 ---
 
@@ -43,14 +43,14 @@ The last two actions — `query_siem` and `create_ticket` — connect to real en
 
 We designed three scenarios that escalate in difficulty:
 
-**Easy — Malware Triage**  
+**Easy - Malware Triage**  
 Two confirmed malware alerts and one false positive. The agent needs to block the threats and correctly identify the safe device. Straightforward, but it establishes the baseline.
 
-**Medium — Brute Force Attack**  
+**Medium - Brute Force Attack**  
 Four login alerts with varying severity. The trick here is that the agent can't just blindly block IPs. It needs to check the logs first, understand the pattern, then act. An agent that blocks without investigating scores much lower than one that does it in the right order.
 
-**Hard — Full APT Kill Chain**  
-This is the real test. A hacker sends a phishing email, compromises a workstation, starts moving through the network, and begins stealing data — all across 5 connected alerts. There's also a false positive mixed in to trip up a reactive agent. Getting this right requires understanding context from earlier steps.
+**Hard - Full APT Kill Chain**  
+This is the real test. A hacker sends a phishing email, compromises a workstation, starts moving through the network, and begins stealing data - all across 5 connected alerts. There's also a false positive mixed in to trip up a reactive agent. Getting this right requires understanding context from earlier steps.
 
 ---
 
@@ -62,13 +62,13 @@ This was the part we spent the most time on. A simple right/wrong reward doesn't
 final_score = base_score + speed_bonus + chain_bonus + fp_penalty
 ```
 
-**Base score** — is the action correct for this alert type and severity?
+**Base score** - is the action correct for this alert type and severity?
 
-**Speed bonus** — on critical threats, speed matters. An agent that immediately blocks a ransomware alert gets a bonus. One that spends time investigating what's clearly malware loses points.
+**Speed bonus** - on critical threats, speed matters. An agent that immediately blocks a ransomware alert gets a bonus. One that spends time investigating what's clearly malware loses points.
 
-**Chain bonus** — the biggest innovation. Doing `query_logs → block_ip` earns more than doing `block_ip` alone on a medium-severity login alert. This teaches the agent *how* to reason, not just *what* to do.
+**Chain bonus** - the biggest innovation. Doing `query_logs → block_ip` earns more than doing `block_ip` alone on a medium-severity login alert. This teaches the agent *how* to reason, not just *what* to do.
 
-**False positive penalty** — the most important one. Blocking a known-safe IP in production causes an outage. We penalize this heavily — up to -0.40. This forces the agent to actually read the alert before reacting.
+**False positive penalty** - the most important one. Blocking a known-safe IP in production causes an outage. We penalize this heavily - up to -0.40. This forces the agent to actually read the alert before reacting.
 
 ---
 
@@ -83,7 +83,7 @@ We ran the baseline agent (Qwen2.5-72B, zero-shot) through all three tasks:
 | Hard | 0.72 | Misses phishing context, weak on chains |
 | **Overall** | **0.74** | Strong baseline, clear room to improve |
 
-The medium task scoring lowest is actually the most interesting finding. The model knows *what* to do but not *when* — it skips the log investigation step and acts too fast. That's exactly what fine-tuning on our environment fixes.
+The medium task scoring lowest is actually the most interesting finding. The model knows *what* to do but not *when* - it skips the log investigation step and acts too fast. That's exactly what fine-tuning on our environment fixes.
 
 ---
 
