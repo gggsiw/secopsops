@@ -155,6 +155,18 @@ Then open `http://localhost:7860/play`
 
 ---
 
+## Training Evidence: Loss Curve
+
+<img width="1183" height="582" alt="loss_curve" src="https://github.com/user-attachments/assets/747e2013-9a3a-478d-bcc0-19cbc8938cde" />
+
+
+## Performance: Reward Curves
+
+<img width="2233" height="740" alt="reward_curve" src="https://github.com/user-attachments/assets/7c7a61eb-1cc1-40f5-8bbd-e68bbee92b1a" />
+
+
+
+
 ## Team
 
 Built by **Krishna Sharma** and **Darsh Gupta** for the Meta PyTorch OpenEnv Hackathon × Scaler Grand Finale, April 2026.
