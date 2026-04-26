@@ -165,6 +165,11 @@ Then open `http://localhost:7860/play`
 
 
 
+## Before VS after training:
+
+<img width="2085" height="887" alt="before_after" src="https://github.com/user-attachments/assets/855c3b02-2416-4633-ae74-2411ec1de669" />
+
+
 
 ## Team
 
