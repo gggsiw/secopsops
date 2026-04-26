@@ -4,7 +4,7 @@
 **Live Demo:** https://itzrealmee-secopsops.hf.space/play  
 **GitHub:** https://github.com/gggsiw/secopsops  
 **Colab Notebook:** https://colab.research.google.com/github/gggsiw/secopsops/blob/main/secopsops_training.ipynb  
-
+**Blog Link:** https://huggingface.co/spaces/itzrealmee/secopsops/blob/main/Blog.MD
 ---
 
 ## The Problem
@@ -150,7 +150,7 @@ Then open `http://localhost:7860/play`
 | Live Demo | https://itzrealmee-secopsops.hf.space/play |
 | GitHub | https://github.com/gggsiw/secopsops |
 | Colab Notebook | https://colab.research.google.com/github/gggsiw/secopsops/blob/main/secopsops_training.ipynb |
-
+| Blog Post | https://huggingface.co/spaces/itzrealmee/secopsops/blob/main/Blog.MD |
 
 ---
 
